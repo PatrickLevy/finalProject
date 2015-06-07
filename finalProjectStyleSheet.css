@@ -1,0 +1,14 @@
+body {
+	background-color: lightgray;
+}
+
+li {
+	font-weight: bold;
+}
+
+ul {
+	background-color: white;
+}
+ .delete {
+	float: right;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="finalProjectStyleSheet.css">
+<head>
+  <title>Login</title>
+  <meta charset="utf-8" />
+  <script src="teacher.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      
+      <div class="col-md-2">
+      </div>
+
+      <div class="col-md-10">
+        <h1>Testing Center - Teacher Site</h1>
+      </div>
+
+      <div class="col-md-2">
+        <ul class="menu" style="list-style-type:none">
+          <li>
+            <button name="getTests" value="showSomeTests" onClick="createTestList()" >Edit Tests</button>  
+          </li>
+          <li>
+            <button name="getResults" value="showResults" onClick="">Test Results</button>
+          </li>
+          <li>
+            <form action="home.php?action=logout">
+              <button>Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-10">
+        <ul id="test-list" style="list-style-type:none">
+        </ul>
+
+      </div>
+      
+      
+        
+        
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
