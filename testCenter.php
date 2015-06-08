@@ -2,6 +2,7 @@
 session_start();
 include 'storedInfo.php';
 	
+	
 	//****************************************************************************
 	//Connect to database
 	//****************************************************************************
@@ -74,7 +75,24 @@ include 'storedInfo.php';
 	else {
 		$postData->parameters = null;
 	}
+	
 
+	//******************************************************
+	//Check if user has taken test for Javascript
+	//******************************************************
+	if ($_GET[checkIfTaken] !=null){
+		//echo 'hello';
+		$userName = $_SESSION['username'];
+		$allTests = $mysqli->query("SELECT testName FROM testCenterTestsDb
+									WHERE (type = 'responses' && user='".$userName."')");
+	
+		$tests = array();
+		while ($curTest = $allTests->fetch_assoc()) {
+		  $tests[] = $curTest;
+		}
+	echo json_encode($tests);
+
+	}
 	//******************************************************
 	//GET Tests from database for Javascript
 	//******************************************************
@@ -82,6 +100,40 @@ include 'storedInfo.php';
 	//echo '<br>Data was received<br>';
 		$allTests = $mysqli->query("SELECT id, testName, user FROM testCenterTestsDb
 									WHERE type = 'questions'");
+	
+		$tests = array();
+		while ($curTest = $allTests->fetch_assoc()) {
+		  $tests[] = $curTest;
+		}
+	echo json_encode($tests);
+
+	}
+
+	//******************************************************
+	//GET Tests Responses for student from database for Javascript
+	//******************************************************
+	if ($_GET[getTestScores] !=null){
+		//echo 'hello';
+		$userName = $_SESSION['username'];
+		$allTests = $mysqli->query("SELECT id, testName, user, numberOfQuestions, numberCorrect FROM testCenterTestsDb
+									WHERE (type = 'responses' && user='".$userName."')");
+	
+		$tests = array();
+		while ($curTest = $allTests->fetch_assoc()) {
+		  $tests[] = $curTest;
+		}
+	echo json_encode($tests);
+
+	}
+
+	//******************************************************
+	//GET All Test Responses for Teacher from database for Javascript
+	//******************************************************
+	if ($_GET[getTeacherTestScores] !=null){
+		//echo 'hello';
+		$userName = $_SESSION['username'];
+		$allTests = $mysqli->query("SELECT id, testName, user, numberOfQuestions, numberCorrect FROM testCenterTestsDb
+									WHERE (type = 'responses')");
 	
 		$tests = array();
 		while ($curTest = $allTests->fetch_assoc()) {
@@ -106,44 +158,7 @@ include 'storedInfo.php';
 		}
 		echo json_encode($questions);
 	}	
-		// //Get the questions and responses
-		// $questions = $mysqli->query("SELECT * FROM testCenterTestsDb 
-		//                          WHERE id = $_POST[editQuestions]");
-
-		// while ($question = $questions->fetch_assoc() ) {
-			
-		// 	for ($questionNumber = 1; $questionNumber <=$numberOfQuestions; $questionNumber++){
-				
-		// 		//Initialize indices
-		// 		$questionKey = 'Q' . $questionNumber;
-		// 		$responseA = 'R' . $questionNumber . 'A';
-		// 		$responseB = 'R' . $questionNumber . 'B';
-		// 		$responseC = 'R' . $questionNumber . 'C';
-		// 		$responseD = 'R' . $questionNumber . 'D';
-				
-		// 		echo '<ul>';
-		// 		echo '<li>';
-		// 		echo "Question " . $questionNumber . ": " . "$question[$questionKey]";
-		// 		echo '</li>';
-		// 		echo '<li>';
-		// 		echo "Answer A: " . "$question[$responseA]";
-		// 		echo '</li>';
-		// 		echo '<li>';
-		// 		echo "Answer B: " . "$question[$responseB]";
-		// 		echo '</li>';
-		// 		echo '<li>';
-		// 		echo "Answer C: " . "$question[$responseC]";
-		// 		echo '</li>';
-		// 		echo '<li>';
-		// 		echo "Answer D: " . "$question[$responseD]";
-		// 		echo '</li>';
-		// 		echo '</ul>';
-		// 	}
-			
-		// }
-
-	
-
+		
 
 	/**************************************************************************
 	//Update database based on POST data
@@ -162,9 +177,6 @@ include 'storedInfo.php';
 		$newTestUser = $_SESSION['username'];
 		$newTestType = 'questions'; //$_POST[newTestType];
 		$newTestNumberQs = 0; // (int)$_POST[newTestNumberQs];
-
-		//echo 'adding new test';
-		
 
 		//Check that the test name was properly input
 		if (!is_string($newTestName) || strlen($newTestName) > 255 || strlen($newTestName) <= 0){
@@ -185,26 +197,7 @@ include 'storedInfo.php';
 			}
 		}
 
-		//Add a copy of the test to database to store the key
-
-		// $newTestName = $_POST[newTestName];
-		// $newTestUser = $_SESSION['username'];
-		// $newTestType = 'key'; //$_POST[newTestType];
-		// $newTestNumberQs = 0; // (int)$_POST[newTestNumberQs];
-
-		// if ($errorTestName[1] == false && $errorTestUser[1] == false && $errorTestType[1] == false) {
-		// 	if (!($stmt = $mysqli->prepare("INSERT INTO testCenterTestsDb(testName, user, type, numberOfQuestions) VALUES (?, ?, ?, ?)"))) {
-		// 		echo "Prepare failed: (" . $mysqli->errno .") " . $mysqli->error;	
-		// 	}
-		// if (!($stmt->bind_param("sssi", $_POST[newTestName], $newTestUser, $newTestType, $newTestNumberQs))) {
-		// 	echo "Binding Parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-		// 	}
-		// if (!($stmt->execute())) {
-		// 	echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-		// 	}
-		// }
-
-		//echo '...wait';
+		
 		//return user to original location
 		$filePath = explode('/', $_SERVER['PHP_SELF'], -1);
  	    $filePath = implode('/',$filePath);
@@ -285,9 +278,6 @@ include 'storedInfo.php';
 		while ($answerKey = $answerKeys->fetch_assoc()) {
 		  while ($_POST[$KEYNum]){
 			
-
-			
-			
 				$correctAnswer = $answerKey[$KEYNum];
 		
 				if ($correctAnswer == $_POST[$KEYNum]){
@@ -309,9 +299,6 @@ include 'storedInfo.php';
 			//}
 
 			$i++;
-			// $ScoreNum = "Score" . $i;
-			// $KEYNum = "KEY" . $i;
-			// $QNum = "Q" . $i;
 			$QNum = "Q" . $i;
 			$ScoreNum = "Score" . $i;
 			$KEYNum = "KEY" . $i;
@@ -331,13 +318,6 @@ include 'storedInfo.php';
 
 	}
 
-
-	// //Delete All Tests
-	// if ($_POST[delete] == "deleteAllTests"){
-	// 	$mysqli->query("DROP TABLE IF EXISTS testCenterTestsDb");
-	// 	header ('Location: teacher.php');
-	// }
-
 	//Delete Test
 	if ($_GET[deleteTest] != null){
 		$idDelete = $_GET[deleteTest];
@@ -346,18 +326,6 @@ include 'storedInfo.php';
 		$stmt->execute();
 	}
 
-	//**************************************************************
-	//NOT BEING USED!!!
-	//Get Tests from Database 
-	//**************************************************************
-	// if (($_GET[filter] != null) && ($_GET[filter] != 'All')) { 
-	// 	$filterBy = $_GET[filter];
-	// 	$allTests = $mysqli->query("SELECT id, testName, user FROM testCenterTestsDb 
-	// 	                         WHERE type = '".$filterBy."' ");
-	// }
-	// else {
-	// 	$allTests = $mysqli->query("SELECT id, testName, user FROM testCenterTestsDb");
-	// }
 
 	//*********************************************************************
 	//Add new question from Post Data
@@ -373,8 +341,6 @@ include 'storedInfo.php';
 		while ($test = $Tests->fetch_assoc()) {
 			$numberOfQuestions = $test[numberOfQuestions];
 		}
-
-		//WHERE category = '".$filterBy."' ");
 
 		$newQuestionNumber = $numberOfQuestions + 1;
 		$questionNumber = 'Q' . $newQuestionNumber;
@@ -401,10 +367,5 @@ include 'storedInfo.php';
  	 	header("Location: {$redirect}/teacher.html?edit=" . $_POST[editTestId], true);
  	 	die();	
 	}
-
-
-
-
-
 
 ?>

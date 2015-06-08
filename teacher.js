@@ -4,6 +4,7 @@
 // Function to create list of tests on page
 //*************************************************************
 function createTestList() {
+  getTests();
   var ul = document.getElementById('test-list')
   
   //Remove old list from page
@@ -61,17 +62,15 @@ function createTestList() {
   colEditHead.className = 'col-md-2';
   row.appendChild(colEditHead);
 
-  var colResultsHead = document.createElement('div');
-  colResultsHead.className = 'col-md-2';
-  row.appendChild(colResultsHead);
-
+  //Create Title Headers for table
   var colTitleHead = document.createElement('div');
-  colTitleHead.className = 'col-md-4';
+  colTitleHead.className = 'col-md-6';
   var titleText = document.createTextNode('Test Name');
   titleText.style = 'bold';
   colTitleHead.appendChild(titleText);
   row.appendChild(colTitleHead);
 
+  //Create Author heading
   var colCreatedByHead = document.createElement('div');
   colCreatedByHead.className = 'col-md-2';
   var createdText = document.createTextNode('Created By');
@@ -94,20 +93,6 @@ function createTestList() {
     var lineBreak = document.createElement('hr');
     row.appendChild(lineBreak);
 
-    //Create a view scores button for each item
-    var colResults = document.createElement('div');
-    colResults.className = 'col-md-2';
-    row.appendChild(colResults);
-
-    var resultsBtn = document.createElement('button');
-    var btnTxt = document.createTextNode("Student Scores");
-    resultsBtn.appendChild(btnTxt);
-    resultsBtn.id = 'select' + ajaxTestList[i].id;
-    resultsBtn.name = ajaxTestList[i].id;
-    resultsBtn.onclick = function(){window.studentScores(this.name)}; //window is required due to scoping
-    colResults.appendChild(resultsBtn);
-   
-
    //Create an edit button for each item
     var colEdit = document.createElement('div');
     colEdit.className = 'col-md-2';
@@ -121,10 +106,9 @@ function createTestList() {
     editTest.onclick = function(){window.editQuestions(this.name)}; //window is required due to scoping
     colEdit.appendChild(editTest);
 
-
     //Create text for each test
     var colTitle = document.createElement('div');
-    colTitle.className = 'col-md-4';
+    colTitle.className = 'col-md-6';
     row.appendChild(colTitle);
 
     var node = document.createElement('div');
@@ -154,14 +138,124 @@ function createTestList() {
     deleteTest.name = ajaxTestList[i].id;
     deleteTest.onclick = function(){window.deleteTest(this.name)}; //window is required due to scoping
     colDeleteTest.appendChild(deleteTest);
-
     }
 }
+//*************************************************************
+// Function to create list of tests on page
+//*************************************************************
+function showTeacherScoresList() {
+  getTeacherScores();
+
+  var ul = document.getElementById('test-list')
+  
+  //Remove old list from page
+  for (var i=ul.childNodes.length-1; i >= 0; i--) {
+    ul.removeChild(ul.childNodes[i]);
+  }  
+  
+  //Add a new row
+  var row = document.createElement('div');
+  row.className = 'row';
+  ul.appendChild(row);
+
+  //Add a horizontal rule
+  var lineBreak = document.createElement('hr');
+  row.appendChild(lineBreak);
+
+  //Create new list on page
+  
+  //Add a new row for headers
+  var row = document.createElement('div');
+  row.className = 'row';
+  ul.appendChild(row);
+
+
+  //Create Headers for table
+  var colEditHead = document.createElement('div');
+  colEditHead.className = 'col-md-2';
+  row.appendChild(colEditHead);
+
+
+  var colTitleHead = document.createElement('div');
+  colTitleHead.className = 'col-md-4';
+  var titleText = document.createTextNode('Test Name');
+  titleText.style = 'bold';
+  colTitleHead.appendChild(titleText);
+  row.appendChild(colTitleHead);
+
+  var colCreatedByHead = document.createElement('div');
+  colCreatedByHead.className = 'col-md-2';
+  var createdText = document.createTextNode('Student');
+  colCreatedByHead.appendChild(createdText);
+  row.appendChild(colCreatedByHead);
+
+  var colScoreHead = document.createElement('div');
+  colScoreHead.className = 'col-md-2';
+  var scoreText = document.createTextNode('Score');
+  colScoreHead.appendChild(scoreText);
+  row.appendChild(colScoreHead);
+ 
+  for (var i=0; i < ajaxTestList.length; i++){
+
+    //add a new row
+    row = document.createElement('div');
+    row.className = 'row';
+    ul.appendChild(row);
+
+    //Add a horizontal rule
+    var lineBreak = document.createElement('hr');
+    row.appendChild(lineBreak);
+
+   //Create a show results button for each item
+    var colEdit = document.createElement('div');
+    colEdit.className = 'col-md-2';
+    row.appendChild(colEdit);
+
+    var showTest = document.createElement('button');
+    var showTxt = document.createTextNode("Show Results");
+    showTest.appendChild(showTxt);
+    showTest.id = 'select' + ajaxTestList[i].id;
+    showTest.name = ajaxTestList[i].id;
+    showTest.onclick = function(){window.showTestResults(this.name)}; //window is required due to scoping
+    colEdit.appendChild(showTest);
+
+
+    //Create text for each test
+    var colTitle = document.createElement('div');
+    colTitle.className = 'col-md-4';
+    row.appendChild(colTitle);
+
+    var node = document.createElement('div');
+    var nodeText = document.createTextNode(ajaxTestList[i].testName);
+    node.appendChild(nodeText);
+    colTitle.appendChild(node);
+
+    //Create text for each test creator
+    var colCreatedBy = document.createElement('div');
+    colCreatedBy.className = 'col-md-2';
+    row.appendChild(colCreatedBy);
+
+    var createdBy = document.createElement('div');
+    var createdByTxt = document.createTextNode(ajaxTestList[i].user);
+    createdBy.appendChild(createdByTxt);
+    colCreatedBy.appendChild(createdBy);
+
+    var colScore = document.createElement('div');
+    colScore.className = 'col-md-2';
+    row.appendChild(colScore);
+
+    var score = document.createElement('div');
+    var scoreTxt = document.createTextNode(ajaxTestList[i]['numberCorrect'] + ' out of ' + ajaxTestList[i]['numberOfQuestions']);
+    score.appendChild(scoreTxt);
+    colScore.appendChild(score);
+    
+    }
+}
+
 //*************************************************************
 // Function to delete a test from Database using AJAX
 //*************************************************************
 function deleteTest(testId){
-  console.log('delete: ' + testId);
 
   var req = new XMLHttpRequest();
   if(!req){
@@ -176,16 +270,7 @@ function deleteTest(testId){
   //Ajax call
   req.onreadystatechange = function(){
     if(this.readyState === 4 && this.status == 200){
-      //all done and no data to be received
-      //response = JSON.parse(this.responseText);
       
-
-      //update page - this only works after previous delete
-      
-      //createTestList();
-
-      //createTestList();
-      console.log('delete should be complete');
       location.reload();
 
       var readyStateCheckInterval = setInterval(function() {
@@ -194,22 +279,15 @@ function deleteTest(testId){
           console.log('ready state is complete');
           
           console.log('creating test list!!!');
-          createTestList();    
-          //getTests();
+          createTestList();       
       }
     }, 10);
-      // console.log('creating test list!!!');
-      // createTestList();
       getTests();
     }
 
   };
-  console.log('got here');
   req.open('GET', url);  //I can't get this to work with POST!!!
   req.send();
-  console.log('and got here');
-  
-
 
   return true;
 }
@@ -218,7 +296,7 @@ function deleteTest(testId){
 //Function to display and edit the questions of a test
 //**************************************************************************
 function editQuestions(testId) {
-  console.log('edit questions:' + testId)
+  //console.log('edit questions:' + testId)
   var ul = document.getElementById('test-list')
   
     //Remove old list from page
@@ -228,11 +306,8 @@ function editQuestions(testId) {
 
     //Get questions for selected test
     getQuestions(testId);  
-    console.log(ajaxQuestionList);
 
     //Display questions
-    console.log(ajaxQuestionList[0].numberOfQuestions);
-
     for (i = 1; i <= ajaxQuestionList[0].numberOfQuestions; i++){
       
       var questionKey = "Q" + i;
@@ -277,12 +352,6 @@ function editQuestions(testId) {
       newItemKey.appendChild(newTxtKey);
       newQuestionItem.appendChild(newItemKey);
 
-      //Append a delete button
-      // var newDeleteBtn = document.createElement('button')
-      // var delQstTxt = document.createTextNode("Delete Question");
-      // newDeleteBtn.appendChild(delQstTxt);
-      // newQuestionItem.appendChild(newDeleteBtn);
-
       var lineBreak = document.createElement('hr');
       newQuestionItem.appendChild(lineBreak);
 
@@ -299,22 +368,16 @@ function editQuestions(testId) {
   //Create a field for the test name
   var newQuestionForm = document.createElement('form');
   newQuestionForm.name = 'editTestId';  //does this do anything?
-  //newQuestionForm.value = ajaxQuestionList[0].id;
-  //newQuestionForm.name = ajaxQuestionList[0].id;
-  //console.log(ajaxQuestionList[0].id);
   newQuestionForm.method = 'post';
   newQuestionForm.action = 'testCenter.php';
-  //newQuestionForm.onsubmit = addNewQuestion();
 
   //include a hidden form so that the test name is sent
   var newQuestionId = document.createElement('input');
   newQuestionId.type = 'hidden';
   newQuestionId.name = 'editTestId';
   newQuestionId.value = ajaxQuestionList[0].id;
-  
 
   var newQuestionName = document.createElement('input');
-  //newQuestionName.name = '&editTestId='+ajaxQuestionList[0].id+'newQuestion';
   newQuestionName.name = 'newQuestion';
   newQuestionName.type = 'text';
   newQuestionName.placeholder = 'Add a New Question';
@@ -379,16 +442,106 @@ function editQuestions(testId) {
   newQuestionForm.appendChild(selectAnswer);
   ul.appendChild(newQuestionForm);
 
-
-
 }
+//*************************************************************************
+//Function to show the results of a test
+//**************************************************************************
+function showTestResults(testId) {
+  //console.log('edit questions:' + testId)
+  var ul = document.getElementById('test-list')
+  
+    //Remove old list from page
+    for (var i=ul.childNodes.length-1; i >= 0; i--) {
+      ul.removeChild(ul.childNodes[i]);
+    }
 
+    //Get questions for selected test
+    getQuestions(testId);  
+
+    //Display questions
+      var newOverallScoreItem = document.createElement('li');
+      var newOverallScoreTxt = document.createTextNode(ajaxQuestionList[0]['user'] + " score: "+ ajaxQuestionList[0]['numberCorrect']);
+      newOverallScoreItem.appendChild(newOverallScoreTxt);
+      ul.appendChild(newOverallScoreItem);
+
+      var newPossibleScoreItem = document.createElement('li');
+      var newPossibleScoreTxt = document.createTextNode("Possible Points: " + ajaxQuestionList[0]['numberOfQuestions']);
+      newPossibleScoreItem.appendChild(newPossibleScoreTxt);
+      ul.appendChild(newPossibleScoreItem);
+      
+      var lineBreak = document.createElement('hr');
+      ul.appendChild(lineBreak);
+
+      //Append the student's overall score to the page
+
+    for (i = 1; i <= ajaxQuestionList[0].numberOfQuestions; i++){
+      
+      var questionKey = "Q" + i;
+      var answerAKey = "R" + i + "A";
+      var answerBKey = "R" + i + "B";
+      var answerCKey = "R" + i + "C";
+      var answerDKey = "R" + i + "D";
+      var studentAnswer = "KEY" + i;
+      var answerScore = "Score" + i;
+
+      //Append question
+      var newQuestionItem = document.createElement('li');
+      var newQuestionTxt = document.createTextNode(i + ': ' + ajaxQuestionList[0][questionKey]);
+      newQuestionItem.appendChild(newQuestionTxt);
+
+      //Append response A
+      var newResponseItemA = document.createElement('li');
+      var newResponseTxtA = document.createTextNode('A: ' + ajaxQuestionList[0][answerAKey]);
+      newResponseItemA.appendChild(newResponseTxtA);
+      newQuestionItem.appendChild(newResponseItemA);
+
+      //Append response B
+      var newResponseItemB = document.createElement('li');
+      var newResponseTxtB = document.createTextNode('B: ' + ajaxQuestionList[0][answerBKey]);
+      newResponseItemB.appendChild(newResponseTxtB);
+      newQuestionItem.appendChild(newResponseItemB);
+
+      //Append response C
+      var newResponseItemC = document.createElement('li');
+      var newResponseTxtC = document.createTextNode('C: ' + ajaxQuestionList[0][answerCKey]);
+      newResponseItemC.appendChild(newResponseTxtC);
+      newQuestionItem.appendChild(newResponseItemC);
+
+      //Append response D
+      var newResponseItemD = document.createElement('li');
+      var newResponseTxtD = document.createTextNode('D: ' + ajaxQuestionList[0][answerDKey]);
+      newResponseItemD.appendChild(newResponseTxtD);
+      newQuestionItem.appendChild(newResponseItemD);
+
+      //Append a form for collecting responses
+
+      //Append the students answer
+      var newStudentResponse = document.createElement('li');
+      var newStudentResponseTxt = document.createTextNode('Student Answer: ' + ajaxQuestionList[0][studentAnswer]);
+      newStudentResponse.appendChild(newStudentResponseTxt);
+      newQuestionItem.appendChild(newStudentResponse);
+      
+      //Append whether the answer was correct
+      var newAnswerScore = document.createElement('li');
+      var newAnswerScoreTxt = document.createTextNode(ajaxQuestionList[0][answerScore]);
+      newAnswerScore.appendChild(newAnswerScoreTxt);
+      newQuestionItem.appendChild(newAnswerScore);
+
+      //Add a line break between questions
+      var lineBreak = document.createElement('hr');
+      newQuestionItem.appendChild(lineBreak);
+
+      //Append the entire question/response group to list
+      ul.appendChild(newQuestionItem);
+    }
+  
+}
 
 //********************************************************
 // Function to get questions from Database using AJAX
 //*************************************************************
 function getQuestions(testId) {
-  console.log('Getting questions for: ' + testId)
+  //console.log('Getting questions for: ' + testId)
   var req = new XMLHttpRequest();
   if(!req){
     throw 'Unable to create HttpRequest.';
@@ -427,12 +580,7 @@ function studentScores(testId) {
 // Function to get tests from Database using AJAX
 //*************************************************************
 function getTests(){
-  console.log("running getTests()")
-  //Delete old gists, if present
-  // if (gistList.gists.length !== 0){
-  //   gistList.gists = [];
-  // }
-
+ 
   var req = new XMLHttpRequest();
   if(!req){
     throw 'Unable to create HttpRequest.';
@@ -447,17 +595,60 @@ function getTests(){
   req.onreadystatechange = function(){
     if(this.readyState === 4){
       ajaxTestList = JSON.parse(this.responseText);
-      
-      //the following gives an error because it runs before ajaxTestList is defined!
-      //console.log(ajaxTestList[0].testName);
     }
   };
   req.open('GET', url, false); //changed to asynchronous = false, it would be better to use callbacks
   req.send();
-
- 
 }
 
+//********************************************************
+// Function to get test scores from Database using AJAX
+//*************************************************************
+function getTeacherScores(){
+  
+  var req = new XMLHttpRequest();
+  if(!req){
+    throw 'Unable to create HttpRequest.';
+  }
+  var url = 'testCenter.php';
+  var params = {
+    getTeacherTestScores: 'all'
+  };
+  url += '?' + urlStringify(params);
+  
+  //Ajax call
+  req.onreadystatechange = function(){
+    if(this.readyState === 4){
+      ajaxTestList = JSON.parse(this.responseText);
+    }
+  };
+  req.open('POST', url, false); //changed to asynchronous = false, it would be better to use callbacks
+  req.send();
+}
+//*************************************************************
+// Function to check if user is logged in before proceeding with page load
+//*************************************************************
+function checkForLogin() {
+  var req = new XMLHttpRequest();
+  if(!req){
+    throw 'Unable to create HttpRequest.';
+  }
+  var url = 'testCenter.php';
+  var params = {
+    loggedIn: 'true'
+  };
+  url += '?' + urlStringify(params);
+  
+  //Ajax call
+  req.onreadystatechange = function(){
+    if(this.readyState === 4){
+      loggedIn = JSON.parse(this.responseText);
+    }
+  };
+  req.open('GET', url, false); //changed to asynchronous = false, it would be better to use callbacks
+  req.send();
+  
+}
 //*************************************************************
 // Function to stringify the url for the ajax call
 //*************************************************************
@@ -470,13 +661,13 @@ function urlStringify(obj){
   return str.join('&');
 }
 
+function logout() {
+  window.location.assign("http://web.engr.oregonstate.edu/~levyp/cs290WebDev/finalProject/home.php?action=logout");
+}
 
 function logTests(){
   console.log(ajaxTestList);
 }
-
-
-
 
 //***********************************************
 //Parse Get Data
@@ -495,34 +686,17 @@ function getParameterByName(name) {
 //*************************************************************
 window.onload = function() {
   
-
-  //callback method doesn't work unless i use synchronous XMLHttpRequest
-  secondFunction();
-
-  function firstFunction(_callback) {
-    getTests();
-    _callback();
-  }
-
-  function secondFunction() {
-    firstFunction(function() {
-      console.log('done getting tests!!!!');
-      createTestList();
-    });
-  }
+  //checkForLogin();
+  createTestList();
 
   //Check for test edit
   var editId = getParameterByName('edit');
   if (getParameterByName('edit')) {
-    console.log(editId);
+    
     getQuestions(editId);
     editQuestions(editId);
   }
   else {
-    console.log('edit test was not specified');
+    
   }
-  //console.log(getParameterByName(window.location.search));
-  
-
-
 };

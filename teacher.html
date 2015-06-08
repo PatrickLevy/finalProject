@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="finalProjectStyleSheet.css">
 <head>
-  <title>Login</title>
+  <title>Testing Center</title>
   <meta charset="utf-8" />
   <script src="teacher.js"></script>
 </head>
@@ -22,15 +22,15 @@
       <div class="col-md-2">
         <ul class="menu" style="list-style-type:none">
           <li>
-            <button name="getTests" value="showSomeTests" onClick="createTestList()" >Edit Tests</button>  
+            <button class="btn" name="getResults" value="showResults" onClick="showTeacherScoresList()">Scores</button>
           </li>
+          <br>
           <li>
-            <button name="getResults" value="showResults" onClick="">Test Results</button>
+            <button class="btn" name="getTests" value="showSomeTests" onClick="createTestList()" >Create Tests</button>  
           </li>
+          <br>
           <li>
-            <form action="home.php?action=logout">
-              <button>Logout</button>
-            </form>
+            <button class="btn" name="action" value="logout" onClick="logout()">Logout</button>
           </li>
         </ul>
       </div>
@@ -40,11 +40,6 @@
         </ul>
 
       </div>
-      
-      
-        
-        
-
       </div>
     </div>
   </div>

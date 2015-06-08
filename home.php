@@ -162,27 +162,7 @@ if (!$mysqli->query("DROP TABLE IF EXISTS test") ||
     				 password VARCHAR(255), role VARCHAR(255)    )")  ) {   
 	//echo "Table creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
-//*****************************************************************
-//Check if current user is in the database and if they entered the correct password
-//*****************************************************************
 
-  //don't forget to assign $_SESSION['role']!!!
-	// if (!($stmt = $mysqli->prepare("SELECT username, password, role FROM testCenterUserDb 
-	// 								WHERE username = ? "))) {
-	// 	echo "Prepare failed: (" . $mysqli->errno .") " . $mysqli->error;	
-	// }
-	// if (!($stmt->bind_param("s", $username))) {
-	// 	echo "Binding Parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-	// 	}
-	// if (!($stmt->execute())) {
-	// 	echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-	// }
-
-	//This part did not work...s
-	// while ($currentUser = $stmt->fetch_assoc()){
- // 	if ($currentUser["password"] != $password){
- // 	echo "incorrect password";
-	// }
 //***********************************************************************
 //An existing user is logging in, check password in database and set role
 //***********************************************************************
@@ -226,7 +206,7 @@ else if ($_SESSION["newUser"] == true){
     //Check if the username has already been used:
     while ($currentUser = $users->fetch_assoc()){
   	  if ($currentUser["username"] == $username){
-	 	echo "username already used!<br>";
+	 	//echo "username already used!<br>";
 		$_SESSION['validLogin'] = false;
 		break;
 		}
@@ -251,32 +231,7 @@ else if ($_SESSION["newUser"] == true){
 		}
 	}
 }
-//**********************************************************************
-//Redirect properly logged in users
-//**********************************************************************
 
-//Why doesn't this work???
-// if(session_status() == PHP_SESSION_ACTIVE && !empty($_SESSION['validLogin'])) {
-	
-// 	if ($_SESSION['validLogin'] == true && $_SESSION['role'] == 'Student'){
-// 		echo "Student";
-// 		$filePath = explode('/', $_SERVER['PHP_SELF'], -1);
-// 	    $filePath = implode('/',$filePath);
-// 	    $redirect = "http://" . $_SERVER['HTTP_HOST'] . $filePath;
-// 		header("Location: {$redirect}/student.php", true);
-// 		die();
-// 	}
-// 	else if ($_SESSION['validLogin'] == true && $_SESSION['role'] == 'Teacher'){
-// 		echo "Teacher";
-		
-// 	 	$filePath = explode('/', $_SERVER['PHP_SELF'], -1);
-// 	    $filePath = implode('/',$filePath);
-// 	    $redirect = "http://" . $_SERVER['HTTP_HOST'] . $filePath;
-// 	 	header("Location: {$redirect}/teacher.php", true);
-// 	 	die();
-	
-		
-// 	}
 //***************************************************************
 //Display content to logged in user
 //***************************************************************
@@ -298,24 +253,7 @@ else if ($_SESSION['validLogin'] == true && $_SESSION['role'] == 'Student'){
  	 	die();
 }
 
-// if ($_SESSION['validLogin'] == true) {
-// 	echo "<h1>Test Center Home Page<br></h1>";
-// 	echo "Welcome, " . "$username" . "!<br><br>";
-// 	echo "Click <a href=\"home.php?action=logout\">here</a>";
-// 	echo " to logout.<br><br>";
-// 	$_SESSION['visits']++;
-	
-// 	if ($_SESSION['role'] == 'Student'){
-// 	  echo "Click ";
-// 	  echo "<a href=\"student.php\">here</a>";
-// 	  echo " to access the page student.php<br><br>";
-// 	}
-// 	else if ($_SESSION['role'] == 'Teacher'){
-// 	  echo "Click ";
-// 	  echo "<a href=\"teacher.php\">here</a>";
-// 	  echo " to access the page teacher.php";
-// 	}
-//}
+
 
 //***********************************************************************
 //Redirect users who are not logged in properly to the login page
